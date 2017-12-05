@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Arduino.h"
+#include <TinyGPS.h>
+#include "SoftwareSerial.h"
+
 class GpsProvider
 {
 public:

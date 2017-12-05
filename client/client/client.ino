@@ -1,7 +1,5 @@
-#include <SoftwareSerial.h>
-#include <TinyGPS.h>
 #include <RadioHead-master\RH_RF95.h>
-#include <GpsProvider.h>
+#include "GpsProvider.h"
 
 GpsProvider gpsProvider(0, 1);
 RH_RF95 rf95;
