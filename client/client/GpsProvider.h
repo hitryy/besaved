@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Arduino.h"
 #include <TinyGPS.h>
-#include "SoftwareSerial.h"
+#include <SoftwareSerial.h>
 
 class GpsProvider
 {
 public:
+	static const String NONE_DATA;
+
 	const String GPS_DATA = "GPS Data |";
 	const String LATITUDE_INFO = " LAT:";
 	const String LONGITUDE_INFO = " LONG:";
@@ -20,12 +21,16 @@ public:
 	void beginSerial();
 	void initLoopStarted(long loopStarted);
 
-	void tryGetNewData();
+	String tryGetNewData();
+	String getGpsDataCoordAgeSpeedRow() const;
 
 	bool getNewDataCame() const;
 	long getLatitude() const;
 	long getLongitude() const;
+	float getFLatitude() const;
+	float getFLongitude() const;
 	unsigned long getFixAge() const;
+	float getSpeedKmph() const;
 
 private:
 	bool _isSerialBegan;
@@ -37,10 +42,12 @@ private:
 
 	long _latitude;
 	long _longitude;
-	unsigned long _fix_age;
+	float _fLatitude;
+	float _fLongitude;
+	unsigned long _fixAge;
+	float _speedKmph;
 
 	bool _tryReadGps();
-	void _getGpsData();
-	void _printGpsData();
+	void _assignGpsData();
 };
 

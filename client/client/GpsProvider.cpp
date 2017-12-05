@@ -1,5 +1,7 @@
 #include "GpsProvider.h"
 
+const String GpsProvider::NONE_DATA = "none";
+
 void GpsProvider::beginSerial() {
 	if (!_isSerialBegan) {
 		_gpsSerial.begin(9600);
@@ -10,7 +12,7 @@ void GpsProvider::initLoopStarted(long loopStarted) {
 	_loopStarted = loopStarted;
 }
 
-void GpsProvider::tryGetNewData() {
+String GpsProvider::tryGetNewData() {
 	while (millis() - _loopStarted < 1000) {
 		if (_tryReadGps()) {
 			_newDataCame = true;
@@ -18,9 +20,24 @@ void GpsProvider::tryGetNewData() {
 	}
 
 	if (_newDataCame) {
-		_getGpsData();
-		_printGpsData();
+		_assignGpsData();
+		String gpsDataCoordAgeSpeedRow = getGpsDataCoordAgeSpeedRow();
+
+		return gpsDataCoordAgeSpeedRow;
 	}
+
+	return NONE_DATA;
+}
+
+String GpsProvider::getGpsDataCoordAgeSpeedRow() const {
+	String gpsDataCoordAgeSpeed = GPS_DATA + LATITUDE_INFO;
+	gpsDataCoordAgeSpeed += _fLatitude;
+	gpsDataCoordAgeSpeed += LONGITUDE_INFO;
+	gpsDataCoordAgeSpeed += _fLongitude;
+	gpsDataCoordAgeSpeed += AGE;
+	gpsDataCoordAgeSpeed += _fixAge;
+
+	return gpsDataCoordAgeSpeed;
 }
 
 bool GpsProvider::getNewDataCame() const {
@@ -35,8 +52,20 @@ long GpsProvider::getLongitude() const {
 	return _longitude;
 }
 
+float GpsProvider::getFLatitude() const {
+	return _fLatitude;
+}
+
+float GpsProvider::getFLongitude() const {
+	return _fLongitude;
+}
+
 unsigned long GpsProvider::getFixAge() const {
-	return _fix_age;
+	return _fixAge;
+}
+
+float GpsProvider::getSpeedKmph() const {
+	return _speedKmph;
 }
 
 bool GpsProvider::_tryReadGps() {
@@ -51,17 +80,8 @@ bool GpsProvider::_tryReadGps() {
 	return false;
 }
 
-void GpsProvider::_getGpsData() {
-	_gps.get_position(&_latitude, &_longitude, &_fix_age);
-}
-
-void GpsProvider::_printGpsData() {
-	String gpsCompleteData = GPS_DATA + LATITUDE_INFO;
-	gpsCompleteData += _latitude;
-	gpsCompleteData += LONGITUDE_INFO;
-	gpsCompleteData += _longitude;
-	gpsCompleteData += AGE;
-	gpsCompleteData += _fix_age;
-
-	Serial.println(gpsCompleteData);
+void GpsProvider::_assignGpsData() {
+	_gps.get_position(&_latitude, &_longitude, &_fixAge);
+	_gps.f_get_position(&_fLatitude, &_fLongitude, &_fixAge);
+	_speedKmph = _gps.f_speed_kmph();
 }

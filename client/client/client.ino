@@ -1,26 +1,26 @@
-#include <RadioHead-master\RH_RF95.h>
-#include "GpsProvider.h"
+#include "Manager.h"
 
-GpsProvider gpsProvider(0, 1);
-RH_RF95 rf95;
+Manager manager(0, 1);
 
 void setup() {
 	Serial.begin(9600);
-	gpsProvider.beginSerial();
+	manager.init();
 
 	while (!Serial);
 
-	if (!rf95.init()) {
-		Serial.println("RF95 init failed. Please, check the shield");
+	if (!manager.init()) {
+		Serial.println("Init failed");
+
+		return;
 	}
 
-	Serial.println("besaved v. 0.0. Client side started. Minitoring GPS coords");
+	Serial.println("besaved v. 0.0 | Client side started. Monitoring GPS data started...");
 }
 
 void loop() {
-	unsigned long loopStarted = millis();
+	String gpsDataCoordAgeSpeedRow = manager.startGetDataAndSend();
 
-	gpsProvider.initLoopStarted(loopStarted);
-
-	gpsProvider.tryGetNewData();
+	if (gpsDataCoordAgeSpeedRow != GpsProvider::NONE_DATA) {
+		Serial.println(gpsDataCoordAgeSpeedRow);
+	}	
 }
