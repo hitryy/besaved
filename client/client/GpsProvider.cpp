@@ -13,7 +13,7 @@ void GpsProvider::initLoopStarted(long loopStarted) {
 }
 
 String GpsProvider::tryGetNewData() {
-	while (millis() - _loopStarted < 1000) {
+	while (millis() - _loopStarted < 500) {
 		if (_tryReadGps()) {
 			_newDataCame = true;
 		}

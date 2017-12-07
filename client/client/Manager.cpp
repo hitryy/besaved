@@ -1,6 +1,8 @@
 #include "Manager.h"
 
 String Manager::startGetDataAndSend() {
+	int btnStatus = digitalRead(_btnPin);
+
 	unsigned long loopStarted = millis();
 
 	_gpsProvider.initLoopStarted(loopStarted);
@@ -18,6 +20,8 @@ bool Manager::initLoRa() {
 }
 
 bool Manager::init() {
+	pinMode(_btnPin, OUTPUT);
+
 	_gpsProvider.beginSerial();
 	bool initResult = initLoRa();
 
