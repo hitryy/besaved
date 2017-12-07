@@ -1,7 +1,7 @@
 #include "Manager.h"
 #include "Params.h"
 
-Manager manager(GPS_RX, GPS_TX, BTN_PIN);
+Manager manager(GPS_RX, GPS_TX, BTN_PIN, GPS_CYCLES_LEFT_BOUND);
 
 void setup() {
 	Serial.begin(9600);

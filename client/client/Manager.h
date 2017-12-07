@@ -7,19 +7,20 @@
 
 class Manager {
 public:
-	Manager(uint8_t GpsRx, uint8_t GpsTx, uint8_t btnPin) : _gpsProvider(GpsRx, GpsTx), _btnPin(btnPin) {}
+	Manager(uint8_t GpsRx, uint8_t GpsTx, uint8_t btnPin, uint8_t gpsCyclesLeftBound) : _gpsProvider(GpsRx, GpsTx, gpsCyclesLeftBound), _btnPin(btnPin) {}
 	~Manager() {}
 	
 	bool init();
 	String startGetDataAndSend();
-	JsonObject& getPacketData();
+	String getPacketData();
 
-	void sendDataByLoRaAndWait(JsonObject& data);
+	void sendDataByLoRa(byte* data, uint8_t size);
 private:
 	uint8_t _btnPin;
+	uint8_t _btnStatus;
 	GpsProvider _gpsProvider;
 	LoRaProvider _loRaProvider;
-	StaticJsonBuffer<289> _jsonBuffer;
 
-	bool initLoRa();
+	bool _initLoRa();
+	void _stringToByteArray(String str, byte arr[], int size);
 };

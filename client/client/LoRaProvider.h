@@ -9,7 +9,7 @@ public:
 
 	bool init();
 
-	void sendDataAndWait(uint8_t data[]) const;
+	void sendData(byte* data, int size);
 private:
 	RH_RF95 _rf95;
 };

@@ -15,7 +15,7 @@ public:
 	const String SPEED = " SPEED:";
 	const String DATE = " DATE";
 
-	GpsProvider(uint8_t GpsRx, uint8_t GpsTx) : _gpsSerial(GpsRx, GpsTx) {}
+	GpsProvider(uint8_t GpsRx, uint8_t GpsTx, uint8_t gpsCyclesLeftBound) : _gpsSerial(GpsRx, GpsTx), _gpsCyclesLeftBound(gpsCyclesLeftBound) {}
 	~GpsProvider() {};
 
 	void beginSerial();
@@ -33,7 +33,10 @@ public:
 	float getSpeedKmph() const;
 
 private:
+	const uint8_t _gpsCyclesLeftBound;
+
 	bool _isSerialBegan;
+	uint8_t _gpsCyclesLeft;
 
 	TinyGPS _gps;
 	SoftwareSerial _gpsSerial;

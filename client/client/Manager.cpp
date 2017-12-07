@@ -1,7 +1,9 @@
 #include "Manager.h"
 
+using namespace std;
+
 String Manager::startGetDataAndSend() {
-	int btnStatus = digitalRead(_btnPin);
+	_btnStatus = digitalRead(_btnPin);
 
 	unsigned long loopStarted = millis();
 
@@ -9,41 +11,59 @@ String Manager::startGetDataAndSend() {
 
 	String gpsDataCoordAgeSpeedRow = _gpsProvider.tryGetNewData();
 	
-	JsonObject& data = getPacketData();
-	sendDataByLoRaAndWait(data);
+	if (gpsDataCoordAgeSpeedRow != GpsProvider::NONE_DATA) {
+		String packet = getPacketData();
+
+		byte packetBuff[52];
+		uint8_t size = sizeof(packetBuff);
+
+		_stringToByteArray(packet, packetBuff, size);
+
+		sendDataByLoRa(packetBuff, size);
+	}
 
 	return gpsDataCoordAgeSpeedRow;
 }
 
-bool Manager::initLoRa() {
+bool Manager::_initLoRa() {
 	return _loRaProvider.init();
+}
+
+void Manager::_stringToByteArray(String str, byte arr[], int size)
+{
+	for (int i = 0; i < size; i++) {
+		arr[i] = str[i];
+	}
 }
 
 bool Manager::init() {
 	pinMode(_btnPin, OUTPUT);
 
 	_gpsProvider.beginSerial();
-	bool initResult = initLoRa();
+	bool initResult = _initLoRa();
 
 	return initResult;
 }
 
-JsonObject& Manager::getPacketData() {	
+String Manager::getPacketData() {
 	float fLatitude = _gpsProvider.getFLatitude();
 	float fLongitude = _gpsProvider.getFLongitude();
-	unsigned long age = _gpsProvider.getFixAge();
 	float speedKmph = _gpsProvider.getSpeedKmph();
 
-	JsonObject& data = _jsonBuffer.createObject();
+	char fLatChar[16] = { '\0' }, fLonChar[16] = { '\0' }, speedKmphChar[16] = { '\0' };
 
-	data["lat"] = fLatitude;
-	data["long"] = fLongitude;
-	data["age"] = age;
-	data["speed"] = speedKmph;
+	dtostrf(fLatitude, 2, 6, fLatChar);
+	dtostrf(fLongitude, 2, 6, fLonChar);
+	dtostrf(speedKmph, 2, 6, speedKmphChar);
 
-	return data;
+	String completePacket = String(fLatChar) + ';' + 
+							String(fLonChar) + ';' + 
+							String(speedKmphChar) + ';' + 
+							_btnStatus;
+
+	return completePacket;
 }
 
-void Manager::sendDataByLoRaAndWait(JsonObject& data) {
-	_jsonBuffer.clear();
+void Manager::sendDataByLoRa(byte* data, uint8_t size) {
+	_loRaProvider.sendData(data, size);
 }

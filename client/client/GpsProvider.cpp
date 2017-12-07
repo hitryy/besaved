@@ -13,10 +13,18 @@ void GpsProvider::initLoopStarted(long loopStarted) {
 }
 
 String GpsProvider::tryGetNewData() {
+	if (_gpsCyclesLeftBound != 0) {
+		_gpsCyclesLeft++;
+	}
+
 	while (millis() - _loopStarted < 500) {
 		if (_tryReadGps()) {
 			_newDataCame = true;
 		}
+	}
+
+	if (_gpsCyclesLeft == _gpsCyclesLeftBound) {
+		_gpsCyclesLeft = 0;
 	}
 
 	if (_newDataCame) {
@@ -69,6 +77,10 @@ float GpsProvider::getSpeedKmph() const {
 }
 
 bool GpsProvider::_tryReadGps() {
+	if (_gpsCyclesLeft != _gpsCyclesLeftBound) {
+		return false;
+	}
+
 	while (_gpsSerial.available()) {
 		int ch = _gpsSerial.read();
 
