@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
 #include "GpsProvider.h"
 #include "LoRaProvider.h"
 

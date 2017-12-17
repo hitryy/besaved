@@ -39,11 +39,11 @@ String GpsProvider::tryGetNewData() {
 
 String GpsProvider::getGpsDataCoordAgeSpeedRow() const {
 	String gpsDataCoordAgeSpeed = GPS_DATA + LATITUDE_INFO;
-	gpsDataCoordAgeSpeed += _fLatitude;
+	gpsDataCoordAgeSpeed += String(getFLatitude(), 8);
 	gpsDataCoordAgeSpeed += LONGITUDE_INFO;
-	gpsDataCoordAgeSpeed += _fLongitude;
+	gpsDataCoordAgeSpeed += String(getFLongitude(), 8);
 	gpsDataCoordAgeSpeed += AGE;
-	gpsDataCoordAgeSpeed += _fixAge;
+	gpsDataCoordAgeSpeed += getFixAge();
 
 	return gpsDataCoordAgeSpeed;
 }

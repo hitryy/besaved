@@ -19,10 +19,10 @@ String Manager::startGetDataAndSend() {
 
 		_stringToByteArray(packet, packetBuff, size);
 
-		sendDataByLoRa(packetBuff, size);
-
 		Serial.print("Try to send: ");
 		Serial.println(packet);
+
+		sendDataByLoRa(packetBuff, size);
 	}
 
 	return gpsDataCoordAgeSpeedRow;
