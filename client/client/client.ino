@@ -3,6 +3,7 @@
 
 Manager manager(GPS_RX, GPS_TX, BTN_PIN, GPS_CYCLES_LEFT_BOUND);
 
+// »нициализаци€ программы, выполн€юща€с€ только один раз
 void setup() {
 	Serial.begin(9600);
 	manager.init();
@@ -18,6 +19,7 @@ void setup() {
 	Serial.println("besaved v. 0.0 | Client side started. Monitoring GPS data started...");
 }
 
+// ќсновной цикл программы, работающий бесконечно
 void loop() {
 	String gpsDataCoordAgeSpeedRow = manager.startGetDataAndSend();
 

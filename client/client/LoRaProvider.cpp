@@ -1,9 +1,11 @@
 #include "LoRaProvider.h"
 
+// Инициализация LoRa
 bool LoRaProvider::init() {
 	return _rf95.init();
 }
 
+// Отправить данные по БС LoRa
 void LoRaProvider::sendData(byte* data, int size) {
 	_rf95.send(data, size);
 

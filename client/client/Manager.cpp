@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// Начать получать данные от модуля GPS
+// и отправлять по БС LoRa
 String Manager::startGetDataAndSend() {
 	_btnStatus = digitalRead(_btnPin);
 
@@ -28,10 +30,12 @@ String Manager::startGetDataAndSend() {
 	return gpsDataCoordAgeSpeedRow;
 }
 
+// Инициализация модуля LoRa
 bool Manager::_initLoRa() {
 	return _loRaProvider.init();
 }
 
+// Перевод строки в массив байтов
 void Manager::_stringToByteArray(String str, byte arr[], int size)
 {
 	for (int i = 0; i < size; i++) {
@@ -39,6 +43,7 @@ void Manager::_stringToByteArray(String str, byte arr[], int size)
 	}
 }
 
+// Инициализация объекта менеджера
 bool Manager::init() {
 	pinMode(_btnPin, OUTPUT);
 
@@ -48,6 +53,7 @@ bool Manager::init() {
 	return initResult;
 }
 
+// Получить строку данных для отправки по БС LoRa
 String Manager::getPacketData() {
 	float fLatitude = _gpsProvider.getFLatitude();
 	float fLongitude = _gpsProvider.getFLongitude();
@@ -67,6 +73,7 @@ String Manager::getPacketData() {
 	return completePacket;
 }
 
+// Отправить данные по БС LoRa
 void Manager::sendDataByLoRa(byte* data, uint8_t size) {
 	_loRaProvider.sendData(data, size);
 }
