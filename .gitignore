@@ -1,6 +1,9 @@
 .vs/
 *.sln
+*.o
+*.out
 Debug/
+RadioHead/
 __vm/
 *.vcxproj
 *.vcxproj.filters
