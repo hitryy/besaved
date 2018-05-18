@@ -9,7 +9,8 @@ public:
 
 	bool init();
 
-	void sendData(byte* data, int size);
+	void sendData(String data);
+	void reset();
 private:
 	RH_RF95 _rf95;
 };

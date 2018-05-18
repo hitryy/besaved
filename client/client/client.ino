@@ -16,7 +16,9 @@ void setup() {
 		return;
 	}
 
-	Serial.println("besaved v. 0.0 | Client side started. Monitoring GPS data started...");
+	Serial.print("besaved v. ");
+	Serial.print(VERSION);
+	Serial.println(" | Client side started. Monitoring GPS data started...");
 }
 
 // Основной цикл программы, работающий бесконечно

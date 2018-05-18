@@ -6,6 +6,8 @@ const String GpsProvider::NONE_DATA = "none";
 void GpsProvider::beginSerial() {
 	if (!_isSerialBegan) {
 		_gpsSerial.begin(9600);
+
+		Serial.println("GPS init successful");
 	}
 }
 

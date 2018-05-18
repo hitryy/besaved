@@ -16,15 +16,7 @@ String Manager::startGetDataAndSend() {
 	if (gpsDataCoordAgeSpeedRow != GpsProvider::NONE_DATA) {
 		String packet = getPacketData();
 
-		byte packetBuff[52];
-		uint8_t size = sizeof(packetBuff);
-
-		_stringToByteArray(packet, packetBuff, size);
-
-		Serial.print("Try to send: ");
-		Serial.println(packet);
-
-		sendDataByLoRa(packetBuff, size);
+		sendDataByLoRa(packet);
 	}
 
 	return gpsDataCoordAgeSpeedRow;
@@ -33,14 +25,6 @@ String Manager::startGetDataAndSend() {
 // Инициализация модуля LoRa
 bool Manager::_initLoRa() {
 	return _loRaProvider.init();
-}
-
-// Перевод строки в массив байтов
-void Manager::_stringToByteArray(String str, byte arr[], int size)
-{
-	for (int i = 0; i < size; i++) {
-		arr[i] = str[i];
-	}
 }
 
 // Инициализация объекта менеджера
@@ -74,6 +58,6 @@ String Manager::getPacketData() {
 }
 
 // Отправить данные по БС LoRa
-void Manager::sendDataByLoRa(byte* data, uint8_t size) {
-	_loRaProvider.sendData(data, size);
+void Manager::sendDataByLoRa(String data) {
+	_loRaProvider.sendData(data);
 }

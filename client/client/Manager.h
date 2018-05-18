@@ -12,7 +12,7 @@ public:
 	String startGetDataAndSend();
 	String getPacketData();
 
-	void sendDataByLoRa(byte* data, uint8_t size);
+	void sendDataByLoRa(String data);
 private:
 	uint8_t _btnPin;
 	uint8_t _btnStatus;
